@@ -1,27 +1,17 @@
-import { Home } from '@/containers/Home'
-import { Login } from '@/containers/Login'
-import { useEffect, useState } from 'react'
-
+import { Login } from "../containers/Login";
+import { Home } from "../containers/Home";
+import { useState, useEffect } from "react";
 
 export default function Index() {
-  
-  const [accessToken, setAccessToken] = useState<String | null>(null);
+
+  const [token, setToken] = useState<string | null>('');
 
   useEffect(() => {
-    if(typeof window !== 'undefined'){
-      const token = localStorage.getItem('accessToken');
-      if(token){
-        return setAccessToken(token);
-      }
+    if (typeof window !== 'undefined') {
+      const at = localStorage.getItem('accessToken');
+      setToken(at);
     }
-    setAccessToken('')
-  }, [])
+  }, []);
 
-  if(accessToken === null){
-    return <></>
-  }
-
-  return (
-    accessToken ? <Home setAccessToken={setAccessToken}/> : <Login setAccessToken={setAccessToken}/>
-  )
+  return token ? <Home setToken={setToken}/> : <Login setToken={setToken}/>;
 }

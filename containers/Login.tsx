@@ -1,47 +1,47 @@
-/* eslint-disable @next/next/no-img-element */
-
-import { executeRequest } from "@/services/api";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { useState } from "react";
+import { executeRequest } from "../services/api";
 
-type LoginProps ={
-    setAccessToken(s: string): void
+type LoginProps = {
+    setToken(s: string): void
 }
-export const Login : NextPage<LoginProps> = ({setAccessToken}) => {
-    
-    const [loading, setLoading] = useState(false);
+
+export const Login: NextPage<LoginProps> = ({setToken}) => {
+
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const doLogin = async () => {
-        try
-        {
+        try{
             setError('');
-            if(!login || login.trim().length < 1 || !password || password.trim().length < 1)
-                return setError("Favor preencher o formulário.");
-            setLoading(true);
-            const body = {login, password};
-            const response = await executeRequest('login', 'POST', body);
-
-        if(response && response.data){
-            const {token, name, email} = response.data;
-            localStorage.setItem('accessToken', token);
-            localStorage.setItem('name', name);
-            localStorage.setItem('email', email);
-            setAccessToken(token);
-        }
-        setTimeout (()=> setLoading(false), 3000);
-        }
-        catch(e : any){
-            console.log('Ocorreu um erro ao efetuar o login', e);
-            console.log(e?.response?.data?.error);
-
-            if(e?.response?.data?.error){
-                setError(e?.response?.data?.error);
+            if(!login || !password){
+                setError('Favor preencher os campos!');
+                return
             }
-            else {
-                setError('Ocorreu erro ao efetuar login, tente novamente.');
+
+            setLoading(true);
+
+            const body = {
+                login,
+                password
+            };
+
+            const result = await executeRequest('login', 'post', body);
+            if(result && result.data){
+                const obj = result.data;
+                localStorage.setItem('accessToken',obj.token);
+                localStorage.setItem('name',obj.name);
+                localStorage.setItem('email',obj.email);
+                setToken(obj.token);
+            }
+        }catch(e : any){
+            console.log(`Erro ao efetuar login: ${e}`);
+            if(e?.response?.data?.error){
+                setError(e.response.data.error);
+            }else{
+                setError(`Erro ao efetuar login, tente novamente.`);
             }
         }
 
@@ -50,22 +50,24 @@ export const Login : NextPage<LoginProps> = ({setAccessToken}) => {
 
     return (
         <div className="container-login">
-            <img src="logo.svg" alt="Logo FIAP" className="logo"/>
+            <img src="/logo.svg" alt="Logo Fiap" className="logo" />
             <div className="form">
                 {error && <p className="error">{error}</p>}
-
-
                 <div className="input">
-                    <img src="mail.svg" alt="Login"/>
-                    <input placeholder="Login" value={login} 
-                    onChange={e => setLogin(e.target.value)}/>
+                    <img src="/mail.svg" alt="Login Icone" />
+                    <input type='text' placeholder="Login"
+                        value={login}
+                        onChange={evento => setLogin(evento.target.value)}
+                    />
                 </div>
-
                 <div className="input">
-                    <img src="lock.svg" alt="Senha"/>
-                    <input placeholder="Senha" type="password" value={password} onChange={e => setPassword(e.target.value)}/>
+                    <img src="/lock.svg" alt="Senha Icone" />
+                    <input type='password' placeholder="Senha"
+                        value={password}
+                        onChange={evento => setPassword(evento.target.value)}
+                    />
                 </div>
-                <button onClick={doLogin} disabled={loading}>{loading ? '... Carregando' : 'Entrar'}</button>
+                <button onClick={doLogin} disabled={loading}>{loading ? '...Carregando': 'Login'}</button>
             </div>
         </div>
     );

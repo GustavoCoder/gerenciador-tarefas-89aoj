@@ -3,7 +3,7 @@
 .container-login{
     .logo{
         width: 180px;
-        display: block;
+        display:block;
         margin: auto;
         margin-bottom: 47px;
     }
@@ -12,17 +12,18 @@
         .input{
             padding: 10px;
             margin-bottom: 10px;
+
             img{
                 width: 18px;
                 height: 18px;
                 margin-right: 18px;
                 margin-top: 3px;
             }
-            input{
+
+            input {
                 width: 224px;
                 border-radius: 0px;
-                padding-bottom: 8px;
-
+                padding-bottom: 8px
             }
         }
 
@@ -50,23 +51,23 @@
             margin-left: 5%;
 
             .input{
-                img{
+                img {
                     width: 22px;
                     height: 22px;
                 }
 
-                input{
+                input {
                     width: 343px;
                     border: none;
-                    border-bottom: 1px solid $mediumGreyColor;     
-                    
+                    border-bottom: 1px solid $mediumGreyColor;
+
                     &:focus{
                         border-bottom-color: $primaryColor;
                     }
                 }
             }
 
-            button{
+            button {
                 font-size: 18px;
             }
         }
